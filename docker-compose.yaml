@@ -1,0 +1,38 @@
+services:
+  db:
+    image: anoufranqui/data:data
+    environment:
+      - DB_USER=root
+      - DB_PASSWORD=123456 
+      - DB_NAME=tasksdb
+      - PORT=3000
+      - HOST=0.0.0.0
+    volumes:
+      - ./db_data:/var/lib/mysql
+    networks:
+      - proxy
+    ports:
+      - "3306:3306"
+  backend:
+    image: anoufranqui/backend:backend
+    environment:
+      - DB_USER=root
+      - DB_PASSWORD=123456 
+      - DB_NAME=tasksdb
+      - PORT=3000
+      - HOST=0.0.0.0
+    networks:
+      - proxy
+    ports:
+      - "3000:3000"
+
+  frontend:
+    container_name: tasklist-frontend
+    image: anoufranqui/frontend:frontend
+    ports: 
+     - "8080:8080"
+    networks:
+      - proxy
+networks:
+  proxy:
+    external: true
