@@ -1,0 +1,27 @@
+services:
+  uptime-kuma:
+    image: louislam/uptime-kuma:2
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./data:/app/data
+    networks:
+      - proxy
+    labels: 
+      - "traefik.enable=true"
+      - "traefik.http.routers.uptime-public.rule=Host(`uptime.euuuhh.org`) && (PathPrefix(`/status`) || PathPrefix(`/assets`) || PathPrefix(`/api/status`) || Path(`/favicon.ico`))"
+      - "traefik.http.routers.uptime-public.entrypoints=websecure"
+      - "traefik.http.routers.uptime-public.tls=true"
+      - "traefik.http.routers.uptime-public.service=uptime"
+
+      - "traefik.http.routers.uptime-private.rule=Host(`uptime.euuuhh.org`)"
+      - "traefik.http.routers.uptime-private.middlewares=tinyauth"
+      - "traefik.http.routers.uptime-private.entrypoints=websecure"
+      - "traefik.http.routers.uptime-private.tls=true"
+      - "traefik.http.routers.uptime-private.service=uptime"
+
+      - "traefik.http.services.uptime.loadbalancer.server.port=3001"
+      
+networks:
+  proxy:
+    external: true

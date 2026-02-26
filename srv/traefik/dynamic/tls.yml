@@ -1,0 +1,4 @@
+tls:
+  certificates:
+    - certFile: /etc/letsencrypt/live/euuuhh.org/fullchain.pem
+      keyFile: /etc/letsencrypt/live/euuuhh.org/privkey.pem
